@@ -13,8 +13,21 @@ const App = () => {
         const personObject = {
             name: newName,
         };
-        setPersons(persons.concat(personObject));
-        setNewName('');
+
+        let exists = false;
+        persons.forEach((person) => {
+            if (JSON.stringify(person) === JSON.stringify(personObject)) {
+                exists = true;
+                return alert(
+                    `${personObject.name} is already added to the phonebook`
+                );
+            }
+        });
+
+        if (!exists) {
+            setPersons(persons.concat(personObject));
+            setNewName('');
+        }
     };
 
     const handleNameChange = (event) => {
@@ -35,7 +48,7 @@ const App = () => {
             </form>
             <h2>Numbers</h2>
             {persons.map((person) => (
-                <div>{person.name}</div>
+                <div key={person.name}>{person.name}</div>
             ))}
         </div>
     );
