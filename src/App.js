@@ -24,6 +24,7 @@ const App = () => {
 		};
 
 		let exists = false;
+
 		persons.forEach((person) => {
 			if (
 				person.name === personObject.name &&
@@ -34,12 +35,38 @@ const App = () => {
 				return alert(
 					`${personObject.name} is already added to the phonebook`
 				);
+			} else if (
+				person.name === personObject.name &&
+				person.number !== personObject.number
+			) {
+				if (
+					window.confirm(
+						`${personObject.name} is already added to phonebook, replace the old number with a new one ?`
+					)
+				) {
+					axios
+						.put(
+							`http://localhost:3001/persons/${person.id}`,
+							personObject
+						)
+						.then((response) => {
+							console.log(response.data);
+							setPersons(
+								persons.map((p) =>
+									p.id === response.data.id
+										? response.data
+										: p
+								)
+							);
+						});
+					exists = true;
+					return;
+				}
 			}
 		});
 
 		if (!exists) {
 			peopleServices.addPeople(personObject).then((response) => {
-				console.log('post response', response);
 				setPersons(persons.concat(response));
 				setNewName('');
 				setNewNumber('');
