@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import peopleServices from './services/persons';
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -10,10 +10,7 @@ const App = () => {
 
 	// fetching data from a server
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then((response) => {
-			console.log('response', response.data);
-			setPersons(response.data);
-		});
+		peopleServices.getPeople().then((people) => setPersons(people));
 	}, []);
 
 	const addPerson = (event) => {
@@ -40,14 +37,12 @@ const App = () => {
 		});
 
 		if (!exists) {
-			axios
-				.post('http://localhost:3001/persons', personObject)
-				.then((response) => {
-					console.log(response);
-					setPersons(persons.concat(personObject));
-					setNewName('');
-					setNewNumber('');
-				});
+			peopleServices.addPeople(personObject).then((response) => {
+				console.log('post response', response);
+				setPersons(persons.concat(response));
+				setNewName('');
+				setNewNumber('');
+			});
 		}
 	};
 
