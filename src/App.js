@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import peopleServices from './services/persons';
+import axios from 'axios';
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -64,6 +65,17 @@ const App = () => {
 			person.name.includes(filter.toUpperCase())
 	);
 
+	const handleDelete = ({ id, name }) => {
+		console.log(id);
+		if (window.confirm(`delete ${name} ?`)) {
+			axios
+				.delete(`http://localhost:3001/persons/${id}`)
+				.then((response) => {
+					console.log('delete respones', response);
+				});
+		}
+	};
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
@@ -87,6 +99,7 @@ const App = () => {
 			{peopleToShow.map((person) => (
 				<div key={person.id}>
 					{person.name} {person.number}
+					<button onClick={() => handleDelete(person)}>delete</button>
 				</div>
 			))}
 		</div>
