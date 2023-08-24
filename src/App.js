@@ -8,6 +8,15 @@ const App = () => {
 	const [newName, setNewName] = useState('');
 	const [newNumber, setNewNumber] = useState('');
 	const [filter, setFilter] = useState('');
+	const [message, setMessage] = useState(null);
+
+	const Notification = ({ message }) => {
+		if (message === null) {
+			return null;
+		}
+
+		return <div className="notification">{message}</div>;
+	};
 
 	// fetching data from a server
 	useEffect(() => {
@@ -60,6 +69,10 @@ const App = () => {
 							);
 						});
 					exists = true;
+					setMessage(`Number changed for ${personObject.name}`);
+					setTimeout(() => {
+						setMessage(null);
+					}, 3000);
 					return;
 				}
 			}
@@ -70,6 +83,11 @@ const App = () => {
 				setPersons(persons.concat(response));
 				setNewName('');
 				setNewNumber('');
+
+				setMessage(`${personObject.name} was added to the phonebook`);
+				setTimeout(() => {
+					setMessage(null);
+				}, 3000);
 			});
 		}
 	};
@@ -106,6 +124,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Notification message={message} />
 			<div>
 				filter: <input value={filter} onChange={handleFilter} />
 			</div>
