@@ -67,6 +67,15 @@ const App = () => {
 										: p
 								)
 							);
+						})
+						.catch((error) => {
+							console.log('update error ', error);
+							setMessage(
+								`Information of ${personObject.name} has already been removed from the server`
+							);
+							setTimeout(() => {
+								setMessage(null);
+							}, 3000);
 						});
 					exists = true;
 					setMessage(`Number changed for ${personObject.name}`);
